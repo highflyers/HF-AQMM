@@ -1,19 +1,21 @@
-/**
-  ******************************************************************************
-  * @file    main.c
-  * @author  Ac6
-  * @version V1.0
-  * @date    01-December-2013
-  * @brief   Default main function.
-  ******************************************************************************
-*/
+#include "stm32f1xx.h"
 
+#include <SystemClock_Config.h>
 
-#include "stm32f10x.h"
-			
+#include <uart_usb.h>
 
 int main(void)
 {
+	HAL_Init();
+	SystemClock_Config();
 
-	for(;;);
+	uart_usb_init();
+
+	uint8_t str[] =
+	{ 48, 49, 50, 51, 52 };
+	while (1)
+	{
+		HAL_UART_Receive(&uart_usb_handle, str, 1, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&uart_usb_handle, str, 1, HAL_MAX_DELAY);
+	}
 }
