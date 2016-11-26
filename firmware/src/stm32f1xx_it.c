@@ -15,6 +15,7 @@
 #include <cmsis_os.h>
 #endif
 #include "stm32f1xx_it.h"
+#include <uart_usb.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
