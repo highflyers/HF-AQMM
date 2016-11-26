@@ -11,4 +11,6 @@ void uart_usb_gpio_init();
 void uart_usb_periph_init();
 void uart_usb_init();
 
+void uart_usb_send(char *data, uint16_t size);
+
 #endif /* UART_USB_H_ */

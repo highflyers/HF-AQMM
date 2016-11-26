@@ -1,8 +1,11 @@
+#include <stdio.h>
+#include <string.h>
+
 #include "stm32f1xx.h"
 
 #include <SystemClock_Config.h>
-
 #include <uart_usb.h>
+
 
 int main(void)
 {
@@ -11,11 +14,12 @@ int main(void)
 
 	uart_usb_init();
 
-	uint8_t str[] =
-	{ 48, 49, 50, 51, 52 };
+	char str[1024];
+	int n = 0;
 	while (1)
 	{
-		HAL_UART_Receive(&uart_usb_handle, str, 1, HAL_MAX_DELAY);
-		HAL_UART_Transmit(&uart_usb_handle, str, 1, HAL_MAX_DELAY);
+		snprintf(str, 1024, "%d\n", ++n);
+		uart_usb_send(str, strlen(str));
+		HAL_Delay(500);
 	}
 }
