@@ -8,6 +8,9 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
+#include <stm32f1xx.h>
+#include <stm32f1xx_hal_usart.h>
+
 /*
  * 	Platform:	STM32F100RBT6B
  *  Medium density value line
@@ -58,5 +61,14 @@
 
 #define LED_B_GPIO      GPIOB
 #define LED_G_GPIO      GPIOB
+
+#define UART_USB_REG					USART1
+#define UART_USB_RCC_ENABLE()			__HAL_RCC_USART1_CLK_ENABLE()
+#define UART_USB_RX_GPIO				GPIOA
+#define UART_USB_RX_PIN					GPIO_PIN_10
+#define UART_USB_RX_GPIO_RCC_ENABLE()	__HAL_RCC_GPIOA_CLK_ENABLE()
+#define UART_USB_TX_GPIO				GPIOA
+#define UART_USB_TX_PIN					GPIO_PIN_9
+#define UART_USB_TX_GPIO_RCC_ENABLE()	__HAL_RCC_GPIOA_CLK_ENABLE()
 
 #endif /* BOARD_H_ */
