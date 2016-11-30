@@ -19,6 +19,8 @@ void RGB_Pwm_Gpio_Init()
 	GPIO_InitTypeDef GPIO_InitStruct;
 
 	//LED_B pin
+	__HAL_RCC_AFIO_CLK_ENABLE();
+	AFIO->MAPR |= AFIO_MAPR_TIM3_REMAP_1;
 	GPIO_InitStruct.Pin = LED_B_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -39,12 +41,13 @@ void RGB_Pwm_Gpio_Init()
 
 void RGB_Timer3_Init()
 {
+	__HAL_RCC_TIM3_CLK_ENABLE();
 	TIM_ClockConfigTypeDef sClockSourceConfig;
 	  TIM_MasterConfigTypeDef sMasterConfig;
 	  TIM_OC_InitTypeDef sConfigOC;
 
 	  htim3.Instance = TIM3;
-	  htim3.Init.Prescaler = 2400;
+	  htim3.Init.Prescaler = 24;
 	  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
 	  htim3.Init.Period = 9999;
 	  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -92,7 +95,7 @@ void RGB_Timer4_Init()
 	  TIM_OC_InitTypeDef sConfigOC;
 
 	  htim4.Instance = TIM4;
-	  htim4.Init.Prescaler = 2400;
+	  htim4.Init.Prescaler = 24;
 	  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
 	  htim4.Init.Period = PWM_PERIOD;
 	  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

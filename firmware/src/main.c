@@ -7,7 +7,6 @@
 #include <uart_usb.h>
 #include "rgb_pwm.h"
 
-
 int main(void)
 {
 	HAL_Init();
@@ -18,14 +17,32 @@ int main(void)
 
 	char str[1024];
 	int n = 0;
+	int pulse = 0;
+	int delta = 1;
 	while (1)
 	{
 		// Set led Duty Cycle in %
-		RGB_Set_PulseWidth(LED_R, 75);
-		snprintf(str, 1024, "%d\n", ++n);
-		//uart_usb_send(str, strlen(str));
-		HAL_UART_Transmit(&uart_usb_handle, (uint8_t*)str, strlen(str), 1000);
-
-		HAL_Delay(500);
+		RGB_Set_PulseWidth(LED_R, pulse % 100);
+		RGB_Set_PulseWidth(LED_G, 100 - (pulse % 100));
+		RGB_Set_PulseWidth(LED_B, 100 - (pulse % 100));
+		if (pulse >= 95)
+		{
+			delta = -1;
+		}
+		else if (pulse <= 5)
+		{
+			delta = 1;
+		}
+		if (n % 100 == 0)
+		{
+			++n;
+			snprintf(str, 1024, "%d\n", n);
+			//uart_usb_send(str, strlen(str));
+			HAL_UART_Transmit(&uart_usb_handle, (uint8_t*) str, strlen(str),
+					1000);
+		}
+		pulse += delta;
+		++n;
+		HAL_Delay(10);
 	}
 }
