@@ -6,6 +6,7 @@
 #include <SystemClock_Config.h>
 #include <uart_usb.h>
 #include "rgb_pwm.h"
+#include "debug.h"
 
 int main(void)
 {
@@ -15,7 +16,6 @@ int main(void)
 	uart_usb_init();
 	RGB_Pwm_Init();
 
-	char str[1024];
 	int n = 0;
 	int pulse = 0;
 	int delta = 1;
@@ -36,10 +36,7 @@ int main(void)
 		if (n % 100 == 0)
 		{
 			++n;
-			snprintf(str, 1024, "%d\n", n);
-			//uart_usb_send(str, strlen(str));
-			HAL_UART_Transmit(&uart_usb_handle, (uint8_t*) str, strlen(str),
-					1000);
+			debug("%d\n", n);
 		}
 		pulse += delta;
 		++n;
