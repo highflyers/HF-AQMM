@@ -11,6 +11,8 @@
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
+static uint8_t _r, _g, _b;
+static uint32_t _value, _delta;
 
 void RGB_Pwm_Gpio_Init()
 {
@@ -130,7 +132,6 @@ void RGB_Pwm_Init()
 	RGB_Timer4_Init();
 }
 
-
 void RGB_Set_PulseWidth(LED_TypeDef led, uint8_t pulseWidth)
 {
 	__IO uint32_t *ocr = &TIM4->CCR1;
@@ -146,11 +147,41 @@ void RGB_Set_PulseWidth(LED_TypeDef led, uint8_t pulseWidth)
 			ocr = &TIM3->CCR2;
 			break;
 	}
-	if(pulseWidth > 100)
-		pulseWidth = 100;
+	if(pulseWidth > 255)
+		pulseWidth = 255;
 
 	if(pulseWidth < 0)
 		pulseWidth = 0;
 
-	*ocr = pulseWidth*PWM_PERIOD/100;
+	*ocr = pulseWidth*PWM_PERIOD/255;
 }
+
+void RGB_Set_Color(uint8_t R, uint8_t G, uint8_t B)
+{
+	RGB_Set_PulseWidth(LED_R, R);
+	RGB_Set_PulseWidth(LED_G, G);
+	RGB_Set_PulseWidth(LED_B, B);
+}
+
+void RGB_Set_Pattern_Color(uint8_t R, uint8_t G, uint8_t B)
+{
+	_r = R > 0;
+	_g = G > 0;
+	_b = B > 0;
+}
+
+void RGB_Pattern_Update()
+{
+	_value += _delta;
+	if (_value >= RGB_PATTERN_MAX)
+	{
+		_delta = -RGB_PATTERN_DELTA;
+	}
+	else if (_value <= RGB_PATTERN_MIN)
+	{
+		_delta = RGB_PATTERN_DELTA;
+	}
+	RGB_Set_Color(_value * _r, _value * _g, _value * _b);
+}
+
+

@@ -31,29 +31,18 @@ int main(void)
 	filter.output_history_size = 1;
 
 	filter_reset(&filter, 0);
+	RGB_Set_Pattern_Color(1,0,1);
+
 	int n = 0;
-	int pulse = 0;
-	int delta = 1;
 	while (1)
 	{
-		// Set led Duty Cycle in %
-		RGB_Set_PulseWidth(LED_R, pulse % 100);
-		RGB_Set_PulseWidth(LED_G, 100 - (pulse % 100));
-		RGB_Set_PulseWidth(LED_B, 100 - (pulse % 100));
-		if (pulse >= 95)
-		{
-			delta = -1;
-		}
-		else if (pulse <= 5)
-		{
-			delta = 1;
-		}
+		RGB_Pattern_Update();
 		if (n % 100 == 0)
 		{
 			++n;
-			debug("%d, %lu\n", 3700 + (n>>3)%600, filter_new_data(&filter, 3700 + ((n>>3)%600)));
+			// input test data
+			debug("%d, %lu\n", 3700 + (n>>2)%600, filter_new_data(&filter, 3700 + ((n>>2)%600)));
 		}
-		pulse += delta;
 		++n;
 		HAL_Delay(10);
 	}
