@@ -52,7 +52,7 @@ void uart_usb_init()
 
 void uart_usb_send(char *data, uint16_t size)
 {
-	HAL_UART_Transmit_IT(&uart_usb_handle, (uint8_t*) data, size);
+	while(HAL_UART_Transmit_IT(&uart_usb_handle, (uint8_t*) data, size) != HAL_OK);
 }
 
 void USART1_IRQHandler()
