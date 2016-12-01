@@ -35,4 +35,4 @@
 firmware/*
 !/firmware/src/
 !/firmware/inc/
-
+!/firmware/startup/
