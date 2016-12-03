@@ -26,10 +26,10 @@ int main(void)
 	filter_t filter;
 	filter.coeffs_a_size = 1;
 	filter.coeffs_a = malloc(1 * sizeof(uint32_t));
-	filter.coeffs_a[0] = 500;
+	filter.coeffs_a[0] = 256;
 	filter.coeffs_b_size = 1;
 	filter.coeffs_b = malloc(1 * sizeof(uint32_t));
-	filter.coeffs_b[0] = 3596;
+	filter.coeffs_b[0] = 1024;
 	filter.input_history = malloc(1 * sizeof(uint32_t));
 	filter.input_history_size = 1;
 	filter.output_history = malloc(1 * sizeof(uint32_t));
@@ -46,7 +46,7 @@ int main(void)
 		{
 			//display adc values
 			debug("%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n", adc_value[0],
-					filter_new_data(&filter, adc_value[0]), adc_value[1],
+					filter_new_data(&filter, adc_value[0]<<3)>>3, adc_value[1],
 					adc_value[2], adc_value[3], adc_value[4], adc_value[5],
 					adc_value[6], adc_value[7]);
 			flaga = 0;
