@@ -9,7 +9,7 @@ uint32_t filter_new_data(filter_t *filter, uint32_t value)
 {
 	uint32_t new_value = 0;
 	new_value = filter->coeffs_a[0] * value + filter->coeffs_b[0] * filter->output_history[0];
-	new_value /= 4096;
+	new_value /= (filter->coeffs_a[0] + filter->coeffs_b[0]);
 	filter->output_history[0] = new_value;
 	return new_value;
 }
