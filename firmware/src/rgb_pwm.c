@@ -88,40 +88,37 @@ void RGB_Timer3_Init()
 	  HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_2);
 }
 
-void RGB_Timer4_Init()
-{
+void RGB_Timer4_Init() {
 	/* Peripheral clock enable */
-	__HAL_RCC_TIM4_CLK_ENABLE();
+	__HAL_RCC_TIM4_CLK_ENABLE()
+	;
 
 	TIM_MasterConfigTypeDef sMasterConfig;
-	  TIM_OC_InitTypeDef sConfigOC;
+	TIM_OC_InitTypeDef sConfigOC;
 
-	  htim4.Instance = TIM4;
-	  htim4.Init.Prescaler = 24;
-	  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-	  htim4.Init.Period = PWM_PERIOD;
-	  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	  HAL_TIM_PWM_Init(&htim4);
+	htim4.Instance = TIM4;
+	htim4.Init.Prescaler = 24;
+	htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim4.Init.Period = PWM_PERIOD;
+	htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	HAL_TIM_PWM_Init(&htim4);
 
-	  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	  HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig);
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig);
 
-	  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	  sConfigOC.Pulse = 2499;
-	  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-	  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-	  HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
+	sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	sConfigOC.Pulse = 2499;
+	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
 
+	HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2);
 
-	  HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2);
+	HAL_TIM_Base_Start(&htim4);
 
-
-	  HAL_TIM_Base_Start(&htim4);
-
-	  HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1);
-	  HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_2);
-
+	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_1);
+	HAL_TIM_OC_Start(&htim4, TIM_CHANNEL_2);
 
 }
 

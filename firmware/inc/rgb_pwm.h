@@ -14,6 +14,7 @@
 #define RGB_PATTERN_MIN			5
 #define RGB_PATTERN_DELTA		10
 #define RGB_PATTERN_MAX			250
+#define RGP_PATTERN_PERIOD		20
 
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;

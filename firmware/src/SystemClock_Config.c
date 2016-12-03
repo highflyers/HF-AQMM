@@ -51,6 +51,7 @@ void SystemClock_Config(void)
 {
   RCC_ClkInitTypeDef clkinitstruct = {0};
   RCC_OscInitTypeDef oscinitstruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /* Enable HSE Oscillator and activate PLL with HSE as source */
   oscinitstruct.OscillatorType  = RCC_OSCILLATORTYPE_HSE;
@@ -76,5 +77,12 @@ void SystemClock_Config(void)
   {
     /* Initialization Error */
     while(1);
+  }
+
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV2;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  {
+      while(1);
   }
 }
