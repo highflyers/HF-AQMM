@@ -59,13 +59,17 @@
  *	PX_TX			PB11		USART3_RX
 */
 
-#define LED_B_GPIO      		GPIOB
-#define LED_B_PIN 				GPIO_PIN_5
-#define LED_R_GPIO				GPIOB
-#define LED_R_PIN				GPIO_PIN_6
-#define LED_G_GPIO      		GPIOB
-#define LED_G_PIN				GPIO_PIN_7
-#define LED_GPIO_RCC_ENABLE() 	__HAL_RCC_GPIOB_CLK_ENABLE()
+#define BUTTON1_GPIO					GPIOA
+#define BUTTON1_PIN						GPIO_PIN_12
+#define BUTTON1_GPIO_RCC_ENABLE()		__HAL_RCC_GPIOA_CLK_ENABLE()
+
+#define LED_B_GPIO      				GPIOB
+#define LED_B_PIN 						GPIO_PIN_5
+#define LED_R_GPIO						GPIOB
+#define LED_R_PIN						GPIO_PIN_6
+#define LED_G_GPIO      				GPIOB
+#define LED_G_PIN						GPIO_PIN_7
+#define LED_GPIO_RCC_ENABLE() 			__HAL_RCC_GPIOB_CLK_ENABLE()
 
 #define UART_USB_REG					USART1
 #define UART_USB_RCC_ENABLE()			__HAL_RCC_USART1_CLK_ENABLE()

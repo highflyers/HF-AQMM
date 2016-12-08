@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "adc.h"
 #include "filter.h"
+#include "button.h"
 
 uint8_t flaga = 0;
 volatile uint32_t adc_value[8];
@@ -23,6 +24,8 @@ int main(void)
 	uart_usb_init();
 	RGB_Pwm_Init();
 	ADC1_Init();
+
+	button_init();
 
 	filter_t filter;
 	filter.coeffs_a_size = 1;
@@ -46,10 +49,10 @@ int main(void)
 		if (flaga == 1)
 		{
 			//display adc values
-			debug("%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n", adc_value[0],
+			debug("%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n", adc_value[0],
 					filter_new_data(&filter, adc_value[0]<<3)>>3, adc_value[1],
 					adc_value[2], adc_value[3], adc_value[4], adc_value[5],
-					adc_value[6], adc_value[7]);
+					adc_value[6], adc_value[7], HAL_GPIO_ReadPin(BUTTON1_GPIO, BUTTON1_PIN), button_flip_flop_status);
 			flaga = 0;
 		}
 		if (HAL_GetTick() - patternLastUpdate >= RGP_PATTERN_PERIOD
@@ -57,6 +60,14 @@ int main(void)
 		{
 			RGB_Pattern_Update();
 			patternLastUpdate = HAL_GetTick();
+		}
+		if (button_flip_flop_status & 1)
+		{
+			RGB_Set_Pattern_Color(0, 1, 0);
+		}
+		else
+		{
+			RGB_Set_Pattern_Color(0, 0, 1);
 		}
 	}
 }
