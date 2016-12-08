@@ -109,8 +109,11 @@ int _write(int file, char *ptr, int len)
 	for (DataIdx = 0; DataIdx < len; DataIdx++)
 	{
 		__io_putchar(*ptr++);
-	}*/
-	uart_usb_send(ptr, len);
+	 }*/
+	if (file == fileno(stderr) || file == fileno(stdout))
+	{
+		uart_usb_send(ptr, len);
+	}
 	return len;
 }
 
