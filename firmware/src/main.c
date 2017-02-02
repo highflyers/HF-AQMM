@@ -12,9 +12,16 @@
 #include "adc.h"
 #include "filter.h"
 #include "button.h"
+#include "params.h"
+
+#define PARAMETERS_ARRAY_SIZE		64
 
 uint8_t flaga = 0;
 volatile uint32_t adc_value[8];
+
+// TODO move somewhere else
+int uart_input_flag = 0;
+char *uart_input_buffer;
 
 int main(void)
 {
@@ -44,6 +51,11 @@ int main(void)
 
 	uint32_t patternLastUpdate = 0;
 
+	int params_array[PARAMETERS_ARRAY_SIZE];
+	parameters_t params;
+	params.array = params_array;
+	params.size = PARAMETERS_ARRAY_SIZE;
+
 	while (1)
 	{
 		if (flaga == 1)
@@ -68,6 +80,13 @@ int main(void)
 		else
 		{
 			RGB_Set_Pattern_Color(0, 0, 1);
+		}
+		if(uart_input_flag)
+		{
+			params_command(&params, uart_input_buffer);
+			char str[1024];
+			params_sprint(&params, str, 1024);
+			puts(str);
 		}
 	}
 }
