@@ -69,5 +69,10 @@ int main(void)
 		{
 			RGB_Set_Pattern_Color(0, 0, 1);
 		}
+		if(uart_input_flag)
+		{
+			puts(uart_input_buffer);
+			uart_input_flag = 0;
+		}
 	}
 }
