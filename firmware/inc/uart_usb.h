@@ -2,8 +2,9 @@
 #define UART_USB_H_
 
 #include <board.h>
+#include <string.h>
 
-#define UART_USB_INPUT_BUFFER_SIZE		1024
+#define UART_USB_INPUT_BUFFER_SIZE		128
 
 extern UART_HandleTypeDef uart_usb_handle;
 extern int uart_input_flag;

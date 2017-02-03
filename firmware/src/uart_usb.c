@@ -6,6 +6,7 @@ int uart_input_flag;
 char uart_input_buffer_working[UART_USB_INPUT_BUFFER_SIZE];
 int uart_input_index;
 char uart_input_buffer[UART_USB_INPUT_BUFFER_SIZE];
+char uart_input_char;
 
 void uart_usb_gpio_init()
 {
@@ -58,27 +59,34 @@ void uart_usb_init()
 
 void uart_usb_send(char *data, uint16_t size)
 {
-	while(HAL_UART_Transmit_IT(&uart_usb_handle, (uint8_t*) data, size) != HAL_OK);
+	while (HAL_UART_Transmit_IT(&uart_usb_handle, (uint8_t*) data, size)
+			!= HAL_OK)
+		;
 }
 
 void uart_usb_start_reception()
 {
-	if (uart_input_index < UART_USB_INPUT_BUFFER_SIZE - 1)
+	HAL_UART_Receive_IT(&uart_usb_handle, (uint8_t*) (&uart_input_char), 1);
+	++uart_input_index;
+	if (uart_input_index >= (UART_USB_INPUT_BUFFER_SIZE - 1))
 	{
-		HAL_UART_Receive_IT(&uart_usb_handle,
-				uart_input_buffer_working + uart_input_index, 1);
+		--uart_input_index;
 	}
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	uart_input_buffer_working[uart_input_index + 1] = 0;
-	if (uart_usb_is_newline_char(uart_input_buffer_working[uart_input_index]))
+	uart_input_buffer_working[uart_input_index-1] = uart_input_char;
+	uart_input_buffer_working[uart_input_index] = 0;
+	if (uart_usb_is_newline_char(
+			uart_input_buffer_working[uart_input_index - 1]))
 	{
 		memcpy(uart_input_buffer, uart_input_buffer_working,
-				strlen(uart_input_buffer_working));
+				uart_input_index+1);
+		uart_input_index = 0;
 		uart_input_flag = 1;
 	}
+	uart_usb_start_reception();
 }
 
 int uart_usb_is_newline_char(char c)
