@@ -59,6 +59,13 @@ void uart_usb_init()
 
 void uart_usb_send(char *data, uint16_t size)
 {
+	while (HAL_UART_Transmit(&uart_usb_handle, (uint8_t*) data, size, HAL_MAX_DELAY)
+			!= HAL_OK)
+		;
+}
+
+void uart_usb_send_it(char *data, uint16_t size)
+{
 	while (HAL_UART_Transmit_IT(&uart_usb_handle, (uint8_t*) data, size)
 			!= HAL_OK)
 		;

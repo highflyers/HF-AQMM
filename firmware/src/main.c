@@ -12,9 +12,15 @@
 #include "adc.h"
 #include "filter.h"
 #include "button.h"
+#include "params.h"
+
+#define PARAMETERS_ARRAY_SIZE		10
+#define STRING_BUFFER_SIZE			256
 
 uint8_t flaga = 0;
 volatile uint32_t adc_value[8];
+
+char str[STRING_BUFFER_SIZE];
 
 int main(void)
 {
@@ -44,17 +50,23 @@ int main(void)
 
 	uint32_t patternLastUpdate = 0;
 
+	int params_array[PARAMETERS_ARRAY_SIZE];
+	parameters_t params;
+	params.array = params_array;
+	params.size = PARAMETERS_ARRAY_SIZE;
+
 	while (1)
 	{
 		if (flaga == 1 && !(button_flip_flop_status & 1))
 		{
-			printf("%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
+			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
 					adc_value[0],
 					filter_new_data(&filter, adc_value[0] << 3) >> 3,
 					adc_value[1], adc_value[2], adc_value[3], adc_value[4],
 					adc_value[5], adc_value[6], adc_value[7],
 					HAL_GPIO_ReadPin(BUTTON1_GPIO, BUTTON1_PIN),
 					button_flip_flop_status);
+			uart_usb_send_it(str, strlen(str));
 			flaga = 0;
 		}
 		if (HAL_GetTick() - patternLastUpdate >= RGP_PATTERN_PERIOD
@@ -75,7 +87,8 @@ int main(void)
 		{
 			if (button_flip_flop_status & 1)
 			{
-				puts(uart_input_buffer);
+				params_command(&params, uart_input_buffer);
+				params_print(&params);
 			}
 			uart_input_flag = 0;
 		}

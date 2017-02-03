@@ -17,6 +17,7 @@ void uart_usb_periph_init();
 void uart_usb_init();
 void uart_usb_start_reception();
 void uart_usb_send(char *data, uint16_t size);
+void uart_usb_send_it(char *data, uint16_t size);
 int uart_usb_is_newline_char(char c);
 
 #endif /* UART_USB_H_ */
