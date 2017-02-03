@@ -8,6 +8,8 @@
 #ifndef ADC_H_
 #define ADC_H_
 
+#define ADC_AVERAGE_SIZE		5000
+
 void ADC1_Init();
 void ADC1_Periph_Init();
 void ADC1_Gpio_Init();

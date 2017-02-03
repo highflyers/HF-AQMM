@@ -152,8 +152,8 @@ void DMA1_Channel1_IRQHandler(void) {
 	static uint16_t counter = 0;
 	static uint32_t sum[8] = {0,0,0,0,0,0,0,0};
 	HAL_DMA_IRQHandler(&hdma_adc1);
-	//average from 1000 samples
-	if (counter < 1000) {
+	//average from ADC_AVERAGE_SIZE samples
+	if (counter < ADC_AVERAGE_SIZE) {
 		for (int i = 0; i < 8; i++) {
 			sum[i] += sample[i];
 		}
@@ -162,7 +162,7 @@ void DMA1_Channel1_IRQHandler(void) {
 		counter = 0;
 		for(int i = 0; i<8; i++)
 		{
-			adc_value[i] = sum[i]/1000;
+			adc_value[i] = sum[i]/ADC_AVERAGE_SIZE;
 			sum[i] = 0;
 		}
 		flaga = 1;
