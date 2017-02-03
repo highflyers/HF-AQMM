@@ -46,13 +46,15 @@ int main(void)
 
 	while (1)
 	{
-		if (flaga == 1)
+		if (flaga == 1 && !(button_flip_flop_status & 1))
 		{
-			//display adc values
-			debug("%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n", adc_value[0],
-					filter_new_data(&filter, adc_value[0]<<3)>>3, adc_value[1],
-					adc_value[2], adc_value[3], adc_value[4], adc_value[5],
-					adc_value[6], adc_value[7], HAL_GPIO_ReadPin(BUTTON1_GPIO, BUTTON1_PIN), button_flip_flop_status);
+			printf("%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
+					adc_value[0],
+					filter_new_data(&filter, adc_value[0] << 3) >> 3,
+					adc_value[1], adc_value[2], adc_value[3], adc_value[4],
+					adc_value[5], adc_value[6], adc_value[7],
+					HAL_GPIO_ReadPin(BUTTON1_GPIO, BUTTON1_PIN),
+					button_flip_flop_status);
 			flaga = 0;
 		}
 		if (HAL_GetTick() - patternLastUpdate >= RGP_PATTERN_PERIOD
@@ -68,6 +70,14 @@ int main(void)
 		else
 		{
 			RGB_Set_Pattern_Color(0, 0, 1);
+		}
+		if (uart_input_flag)
+		{
+			if (button_flip_flop_status & 1)
+			{
+				puts(uart_input_buffer);
+			}
+			uart_input_flag = 0;
 		}
 	}
 }
