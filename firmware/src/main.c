@@ -15,6 +15,7 @@
 #include <filter.h>
 #include <button.h>
 #include <params.h>
+#include <EEPROM.h>
 
 #define PARAMETERS_ARRAY_SIZE		10
 #define STRING_BUFFER_SIZE			256
@@ -29,10 +30,11 @@ int main(void)
 	HAL_Init();
 	SystemClock_Config();
 
+	eeprom_read(0);
+
 	uart_usb_init();
-	RGB_Pwm_Init();
+//	RGB_Pwm_Init();
 	ADC1_Init();
-//	i2c_init();
 
 	button_init();
 
@@ -57,6 +59,7 @@ int main(void)
 	parameters_t params;
 	params.array = params_array;
 	params.size = PARAMETERS_ARRAY_SIZE;
+
 
 	while (1)
 	{
