@@ -7,12 +7,14 @@
 
 #include <SystemClock_Config.h>
 #include <uart_usb.h>
-#include "rgb_pwm.h"
-#include "debug.h"
-#include "adc.h"
-#include "filter.h"
-#include "button.h"
-#include "params.h"
+
+#include <i2c.h>
+#include <rgb_pwm.h>
+#include <debug.h>
+#include <adc.h>
+#include <filter.h>
+#include <button.h>
+#include <params.h>
 
 #define PARAMETERS_ARRAY_SIZE		10
 #define STRING_BUFFER_SIZE			256
@@ -30,6 +32,7 @@ int main(void)
 	uart_usb_init();
 	RGB_Pwm_Init();
 	ADC1_Init();
+//	i2c_init();
 
 	button_init();
 
