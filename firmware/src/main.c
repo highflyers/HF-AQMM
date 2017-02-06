@@ -17,7 +17,7 @@
 #include <params.h>
 #include <EEPROM.h>
 
-#define PARAMETERS_ARRAY_SIZE		10
+#define PARAMETERS_ARRAY_SIZE		12
 #define STRING_BUFFER_SIZE			256
 
 uint8_t flaga = 0;
@@ -30,10 +30,8 @@ int main(void)
 	HAL_Init();
 	SystemClock_Config();
 
-	eeprom_read(0);
-
 	uart_usb_init();
-//	RGB_Pwm_Init();
+	RGB_Pwm_Init();
 	ADC1_Init();
 
 	button_init();
@@ -60,6 +58,7 @@ int main(void)
 	params.array = params_array;
 	params.size = PARAMETERS_ARRAY_SIZE;
 
+	eeprom_read(&params);
 
 	while (1)
 	{
@@ -94,6 +93,8 @@ int main(void)
 			if (button_flip_flop_status & 1)
 			{
 				params_command(&params, uart_input_buffer);
+				eeprom_write(&params);
+				eeprom_read(&params);
 				params_print(&params);
 			}
 			uart_input_flag = 0;

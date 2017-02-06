@@ -7,6 +7,8 @@
 #include <stm32f1xx_hal_i2c.h>
 #include <stm32f1xx_hal_gpio_ex.h>
 
+#define I2C_DELAY			10
+
 int i2c_init();
 int i2c_de_init();
 int i2c_read(uint8_t address, uint8_t * dest, size_t length);
