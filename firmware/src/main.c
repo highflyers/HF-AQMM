@@ -7,14 +7,17 @@
 
 #include <SystemClock_Config.h>
 #include <uart_usb.h>
-#include "rgb_pwm.h"
-#include "debug.h"
-#include "adc.h"
-#include "filter.h"
-#include "button.h"
-#include "params.h"
 
-#define PARAMETERS_ARRAY_SIZE		10
+#include <i2c.h>
+#include <rgb_pwm.h>
+#include <debug.h>
+#include <adc.h>
+#include <filter.h>
+#include <button.h>
+#include <params.h>
+#include <EEPROM.h>
+
+#define PARAMETERS_ARRAY_SIZE		12
 #define STRING_BUFFER_SIZE			256
 
 uint8_t flaga = 0;
@@ -55,6 +58,8 @@ int main(void)
 	params.array = params_array;
 	params.size = PARAMETERS_ARRAY_SIZE;
 
+	eeprom_read(&params);
+
 	while (1)
 	{
 		if (flaga == 1 && !(button_flip_flop_status & 1))
@@ -88,6 +93,8 @@ int main(void)
 			if (button_flip_flop_status & 1)
 			{
 				params_command(&params, uart_input_buffer);
+				eeprom_write(&params);
+				eeprom_read(&params);
 				params_print(&params);
 			}
 			uart_input_flag = 0;
