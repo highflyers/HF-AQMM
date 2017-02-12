@@ -38,6 +38,9 @@ int main(void)
 	button_init();
 	DHTxx_init();
 
+	sensors_control_init();
+	sensors_control_enable_all();
+
 	filter_t filter;
 	filter.coeffs_a_size = 1;
 	filter.coeffs_a = malloc(1 * sizeof(uint32_t));
