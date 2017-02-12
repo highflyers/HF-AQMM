@@ -93,4 +93,8 @@
 #define I2C1_SDA_GPIO_CLK_ENABLE()		__HAL_RCC_GPIOB_CLK_ENABLE()
 #define I2C1_SDA_GPIO_PIN				GPIO_PIN_9
 
+#define DHTxx_GPIO						GPIOB
+#define DHTxx_GPIO_CLK_ENABLE()			__HAL_RCC_GPIOB_CLK_ENABLE()
+#define DHTxx_GPIO_PIN					GPIO_PIN_15
+
 #endif /* BOARD_H_ */

@@ -16,6 +16,7 @@
 #include <button.h>
 #include <params.h>
 #include <EEPROM.h>
+#include <DHTxx.h>
 
 #define PARAMETERS_ARRAY_SIZE		12
 #define STRING_BUFFER_SIZE			256
@@ -35,6 +36,7 @@ int main(void)
 	ADC1_Init();
 
 	button_init();
+	DHTxx_init();
 
 	filter_t filter;
 	filter.coeffs_a_size = 1;
@@ -53,6 +55,9 @@ int main(void)
 
 	uint32_t patternLastUpdate = 0;
 
+	uint32_t DHTxx_READ_PERIOD	= 5000;
+	uint32_t DHTxx_last_read = 0;
+
 	int params_array[PARAMETERS_ARRAY_SIZE];
 	parameters_t params;
 	params.array = params_array;
@@ -60,11 +65,14 @@ int main(void)
 
 	eeprom_read(&params);
 
+	int temperature, humidity, DHTxx_error = 100;
+
 	while (1)
 	{
 		if (flaga == 1 && !(button_flip_flop_status & 1))
 		{
-			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
+			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
+					(uint32_t)temperature,(uint32_t)humidity,(uint32_t)DHTxx_error,
 					adc_value[0],
 					filter_new_data(&filter, adc_value[0] << 3) >> 3,
 					adc_value[1], adc_value[2], adc_value[3], adc_value[4],
@@ -73,12 +81,19 @@ int main(void)
 					button_flip_flop_status);
 			uart_usb_send_it(str, strlen(str));
 			flaga = 0;
+			DHTxx_error = 100;
 		}
 		if (HAL_GetTick() - patternLastUpdate >= RGP_PATTERN_PERIOD
 				|| HAL_GetTick() - patternLastUpdate < 0)
 		{
 			RGB_Pattern_Update();
 			patternLastUpdate = HAL_GetTick();
+		}
+		if (HAL_GetTick() - DHTxx_last_read >= DHTxx_READ_PERIOD
+				|| HAL_GetTick() - DHTxx_last_read < 0)
+		{
+			DHTxx_error = DHTxx_read(&temperature, &humidity);
+			DHTxx_last_read = HAL_GetTick();
 		}
 		if (button_flip_flop_status & 1)
 		{
