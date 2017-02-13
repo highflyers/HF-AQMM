@@ -18,6 +18,11 @@
 #include <EEPROM.h>
 #include <DHTxx.h>
 
+/**
+ * !!! WARNING !!!
+ * Parameters size (in bytes) must be an integer multiple of EEPROM_PAGE_SIZE (EEPROM.h)
+ * Since int type is 4 bytes long, PARAMETERS_ARRAY_SIZE must be an integer multiple of 4
+ */
 #define PARAMETERS_ARRAY_SIZE		12
 #define STRING_BUFFER_SIZE			256
 

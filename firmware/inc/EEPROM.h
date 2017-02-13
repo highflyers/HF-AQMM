@@ -12,6 +12,7 @@
  * 'params' must be a valid structure containing number of parameters to read
  */
 int eeprom_read(parameters_t * params);
+int eeprom_read_page(int addr, uint8_t *values);
 
 int eeprom_write(parameters_t * params);
 int eeprom_write_page(int addr, uint8_t *values);
