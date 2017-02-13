@@ -28,7 +28,7 @@ void uart_px_gpio_init()
 void uart_px_periph_init()
 {
 	UART_PX_RCC_ENABLE();
-	uart_PX_handle.Instance = USART1;
+	uart_PX_handle.Instance = UART_PX_REG;
 	uart_PX_handle.State = HAL_UART_STATE_RESET;
 	uart_PX_handle.Init.BaudRate = UART_PX_BAUD;
 	uart_PX_handle.Init.Mode = USART_MODE_TX_RX;

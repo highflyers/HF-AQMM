@@ -80,9 +80,15 @@ int main(void)
 
 	while (1)
 	{
+		if(uart_px_input_flag)
+		{
+			uart_px_send(str, strlen(str));
+			uart_px_input_flag = 0;
+		}
 		if (flaga == 1 && !(button_flip_flop_status & 1))
 		{
-			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
+			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t"
+					"%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
 					(uint32_t)temperature,(uint32_t)humidity,(uint32_t)DHTxx_error,
 					adc_value[0],
 					filter_new_data(&filter, adc_value[0] << 3) >> 3,
