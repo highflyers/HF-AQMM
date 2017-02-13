@@ -6,8 +6,10 @@
 #include "stm32f1xx.h"
 
 #include <SystemClock_Config.h>
-#include <uart_usb.h>
 
+#include <uart_usb.h>
+#include <uart_px.h>
+#include <sensors_control.h>
 #include <i2c.h>
 #include <rgb_pwm.h>
 #include <debug.h>
@@ -37,6 +39,7 @@ int main(void)
 	SystemClock_Config();
 
 	uart_usb_init();
+	uart_px_init();
 	RGB_Pwm_Init();
 	ADC1_Init();
 
@@ -77,9 +80,15 @@ int main(void)
 
 	while (1)
 	{
+		if(uart_px_input_flag)
+		{
+			uart_px_send(str, strlen(str));
+			uart_px_input_flag = 0;
+		}
 		if (flaga == 1 && !(button_flip_flop_status & 1))
 		{
-			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
+			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t"
+					"%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
 					(uint32_t)temperature,(uint32_t)humidity,(uint32_t)DHTxx_error,
 					adc_value[0],
 					filter_new_data(&filter, adc_value[0] << 3) >> 3,
