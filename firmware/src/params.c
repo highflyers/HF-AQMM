@@ -47,7 +47,7 @@ int params_command(parameters_t * params, char * str)
 	}
 	else if (param__is_list_opening_char(str[index]))
 	{
-		while (!params__is_address_ending_char(str[index]))
+		while (!param__is_list_closing_char(str[index]))
 		{
 			++index;
 			while (params__is_white_char(str[index]) || params__is_list_delim_char(str[index]))

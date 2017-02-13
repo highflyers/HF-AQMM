@@ -6,8 +6,10 @@
 #include "stm32f1xx.h"
 
 #include <SystemClock_Config.h>
-#include <uart_usb.h>
 
+#include <uart_usb.h>
+#include <uart_px.h>
+#include <sensors_control.h>
 #include <i2c.h>
 #include <rgb_pwm.h>
 #include <debug.h>
@@ -37,6 +39,7 @@ int main(void)
 	SystemClock_Config();
 
 	uart_usb_init();
+	uart_px_init();
 	RGB_Pwm_Init();
 	ADC1_Init();
 
