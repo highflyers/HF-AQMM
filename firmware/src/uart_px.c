@@ -69,6 +69,7 @@ void uart_px_start_reception()
 void uart_px_receive_callback()
 {
 	uart_px_input_flag = 1;
+	uart_px_start_reception();
 }
 
 void USART3_IRQHandler()
