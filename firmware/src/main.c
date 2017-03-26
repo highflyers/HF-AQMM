@@ -35,6 +35,7 @@ char str[STRING_BUFFER_SIZE];
 
 int main(void)
 {
+	str[0] = 0;
 	HAL_Init();
 	SystemClock_Config();
 
@@ -87,8 +88,8 @@ int main(void)
 		}
 		if (flaga == 1 && !(button_flip_flop_status & 1))
 		{
-			snprintf(str, STRING_BUFFER_SIZE, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t"
-					"%lu\t%lu\t%lu\t%lu\t%lu\t%d\t%d\n",
+			snprintf(str, STRING_BUFFER_SIZE, "%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t"
+					"%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t%d,\t%d\n",
 					(uint32_t)temperature,(uint32_t)humidity,(uint32_t)DHTxx_error,
 					adc_value[0],
 					filter_new_data(&filter, adc_value[0] << 3) >> 3,

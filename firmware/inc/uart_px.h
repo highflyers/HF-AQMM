@@ -3,7 +3,7 @@
 
 #include <board.h>
 
-#define UART_PX_BAUD		115200
+#define UART_PX_BAUD		57600
 
 extern UART_HandleTypeDef uart_PX_handle;
 extern int uart_px_input_flag;

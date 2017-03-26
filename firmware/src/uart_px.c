@@ -47,18 +47,25 @@ void uart_px_init()
 	uart_px_gpio_init();
 	uart_px_periph_init();
 	uart_px_start_reception();
+	uart_px_input_flag = 0;
 }
 
 void uart_px_send(char *data, uint16_t size)
 {
-	while (HAL_UART_Transmit(&uart_PX_handle, (uint8_t*) data, size, HAL_MAX_DELAY)
-			!= HAL_OK);
+	if (size > 0)
+	{
+		while (HAL_UART_Transmit(&uart_PX_handle, (uint8_t*) data, size,
+				HAL_MAX_DELAY) != HAL_OK);
+	}
 }
 
 void uart_px_send_it(char *data, uint16_t size)
 {
-	while (HAL_UART_Transmit_IT(&uart_PX_handle, (uint8_t*) data, size)
-			!= HAL_OK);
+	if (size > 0)
+	{
+		while (HAL_UART_Transmit_IT(&uart_PX_handle, (uint8_t*) data, size)
+				!= HAL_OK);
+	}
 }
 
 void uart_px_start_reception()
