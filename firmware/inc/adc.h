@@ -14,5 +14,7 @@ void ADC1_Init();
 void ADC1_Periph_Init();
 void ADC1_Gpio_Init();
 void ADC1_DMA_Init();
+void ADC1_pause();
+void ADC1_resume();
 
 #endif /* ADC_H_ */

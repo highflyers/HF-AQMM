@@ -19,6 +19,7 @@
 #include <params.h>
 #include <EEPROM.h>
 #include <DHTxx.h>
+#include <gp2y.h>
 
 /**
  * !!! WARNING !!!
@@ -28,7 +29,7 @@
 #define PARAMETERS_ARRAY_SIZE		12
 #define STRING_BUFFER_SIZE			256
 
-uint8_t flaga = 0;
+uint8_t flaga = 0, gp2y_should_reset = 0;
 volatile uint32_t adc_value[8];
 
 char str[STRING_BUFFER_SIZE];
@@ -43,6 +44,7 @@ int main(void)
 	uart_px_init();
 	RGB_Pwm_Init();
 	ADC1_Init();
+	gp2y_init();
 
 	button_init();
 	DHTxx_init();
@@ -77,7 +79,7 @@ int main(void)
 
 	eeprom_read(&params);
 
-	int temperature, humidity, DHTxx_error = 100;
+	int temperature = 0, humidity = 0;
 
 	while (1)
 	{
@@ -88,18 +90,22 @@ int main(void)
 		}
 		if (flaga == 1 && !(button_flip_flop_status & 1))
 		{
-			snprintf(str, STRING_BUFFER_SIZE, "%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t"
-					"%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t%d,\t%d\n",
-					(uint32_t)temperature,(uint32_t)humidity,(uint32_t)DHTxx_error,
+			snprintf(str, STRING_BUFFER_SIZE, "%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t%lu,\t"
+					"%lu,\t%lu,\t%lu,\t%lu\n",
+					(uint32_t)temperature,
+					(uint32_t)humidity,
 					adc_value[0],
-					filter_new_data(&filter, adc_value[0] << 3) >> 3,
-					adc_value[1], adc_value[2], adc_value[3], adc_value[4],
-					adc_value[5], adc_value[6], adc_value[7],
-					HAL_GPIO_ReadPin(BUTTON1_GPIO, BUTTON1_PIN),
-					button_flip_flop_status);
+					adc_value[1],
+					adc_value[2],
+					adc_value[3],
+					adc_value[4],
+					adc_value[5],
+					adc_value[6],
+					adc_value[7]);
+
 			uart_usb_send_it(str, strlen(str));
+			gp2y_should_reset = 1;
 			flaga = 0;
-			DHTxx_error = 100;
 		}
 		if (HAL_GetTick() - patternLastUpdate >= RGP_PATTERN_PERIOD
 				|| HAL_GetTick() - patternLastUpdate < 0)
@@ -110,8 +116,10 @@ int main(void)
 		if (HAL_GetTick() - DHTxx_last_read >= DHTxx_READ_PERIOD
 				|| HAL_GetTick() - DHTxx_last_read < 0)
 		{
-			DHTxx_error = DHTxx_read(&temperature, &humidity);
+			ADC1_pause();
+			DHTxx_read(&temperature, &humidity);
 			DHTxx_last_read = HAL_GetTick();
+			ADC1_resume();
 		}
 		if (button_flip_flop_status & 1)
 		{

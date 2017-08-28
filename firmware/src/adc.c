@@ -8,12 +8,13 @@
 #include "adc.h"
 #include "stm32f1xx.h"
 #include "debug.h"
+#include <peak_detector.h>
 
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 uint32_t sample[8] = {1,1,1,1,1,1,1,1};
 volatile uint32_t adc_value[8];
-extern uint8_t flaga;
+extern uint8_t flaga, gp2y_should_reset;
 
 void ADC1_Periph_Init() {
 	/* Peripheral clock enable */
@@ -147,11 +148,30 @@ void ADC1_Init()
 	HAL_ADC_Start_DMA(&hadc1, &sample[0], 8);
 }
 
+void ADC1_pause()
+{
+	HAL_ADC_Stop_DMA(&hadc1);
+}
+
+void ADC1_resume()
+{
+	HAL_ADC_Start_DMA(&hadc1, &sample[0], 8);
+}
 
 void DMA1_Channel1_IRQHandler(void) {
 	static uint16_t counter = 0;
 	static uint32_t sum[8] = {0,0,0,0,0,0,0,0};
+	static peak_detector_t gp2y_peak_detector;
 	HAL_DMA_IRQHandler(&hdma_adc1);
+
+	uint32_t gp2y_channel_value = sample[2];
+	if(gp2y_should_reset)
+	{
+		peak_detector_reset(&gp2y_peak_detector);
+		gp2y_should_reset = 0;
+	}
+	peak_detector_new_sample(&gp2y_peak_detector, gp2y_channel_value);
+
 	//average from ADC_AVERAGE_SIZE samples
 	if (counter < ADC_AVERAGE_SIZE) {
 		for (int i = 0; i < 8; i++) {
@@ -167,4 +187,5 @@ void DMA1_Channel1_IRQHandler(void) {
 		}
 		flaga = 1;
 	}
+	adc_value[2] = peak_detector_get(&gp2y_peak_detector);
 }

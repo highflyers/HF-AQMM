@@ -86,6 +86,17 @@ void RGB_Timer3_Init()
 	  }
 	  HAL_TIM_Base_Start(&htim3);
 	  HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_2);
+
+	  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	  sConfigOC.Pulse = 2499;
+	  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+	  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+	  {
+	    //Error_Handler();
+	  }
+	  HAL_TIM_Base_Start(&htim3);
+	  HAL_TIM_OC_Start(&htim3, TIM_CHANNEL_3);
 }
 
 void RGB_Timer4_Init() {
